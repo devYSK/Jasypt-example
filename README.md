@@ -210,3 +210,33 @@ test {
 
 * 위와 같이 사용하면 public repository에서도 application.yml을 안전하게 보관할 수 있다.
 
+
+# Gradle Build시
+
+```shell
+./gradlew clean build \
+-Pjasypt.encryptor.password=${JASYPT_PASSWORD} \
+-Pprofile=${SPRING_ACTIVE_PROFILE}
+```
+
+* -P옵션으로 넘겨주면 된다
+* 위에서 ${JASYPT_PASSWORD} 로 되어있는 이유는 젠킨스에서 빌드하였기 때문 
+  * 평문값으로 설정해줘도 된다. 
+
+
+# Docker Build 시
+
+
+
+```shell
+docker build \
+--build-arg SPRING_ACTIVE_PROFILE=${SPRING_ACTIVE_PROFILE} \
+--build-arg JASYPT_PASSWORD=${JASYPT_PASSWORD} \
+.
+
+...
+```
+
+* --build-arg로 넘겨주면 된다.
+* 위에서 ${JASYPT_PASSWORD} 로 되어있는 이유는 젠킨스에서 빌드하였기 때문
+  * 평문값으로 설정해줘도 된다. 
