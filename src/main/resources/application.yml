@@ -1,0 +1,11 @@
+
+jasypt:
+  encryptor:
+#    password: my-secret-password
+    bean: jasyptStringEncryptor
+
+example:
+  encrypt-value : ENC(FCcfHFNKri0OAj7IcS1MMHkyybCofE65)
+
+server:
+  port: 8081
