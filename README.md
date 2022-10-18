@@ -142,10 +142,7 @@ example:
 ```
 
 
-
-
-
-### 2. 외부에서 `-jar 명령어`로 어플리케이션 실행 시 전달
+## 2. 외부에서 `-jar 명령어`로 어플리케이션 실행 시 전달
 
 - java -jar 명령어로 어플리케이션 실행 시 전달
 
@@ -158,4 +155,58 @@ example:
 '--' 앞의 **jasypt.encryptor.password** 는
 
 복호화를 위한 `Config 클래스 설정` 에서 **@Value** 안에 넣어준 값과 동일해야 한다.
+
+
+
+1. java 명령어를 사용해 실행하는법
+2. IntelliJ에서 VmOption을 주고 실행하는법
+3. gradle build 시 -P 옵션을 주고 실행하는법
+
+
+
+### 2. IntelliJ 에서 로컬에서 VmOption을 주고 실행하는법
+
+<img src="https://blog.kakaocdn.net/dn/l1f9D/btrOZJbf1BR/GVqpeMPaVKfkrmnrHbdXY1/img.png" width=700 height=300>
+
+1. EditConfigruations 
+2. Environment -> VM options에 -D@Value에 적은 값 - (@Value로 주입받는 프로퍼티  값이 같아야 한다. )
+   * 예제에서는 jasypt.encryptor.password 로 했으므로
+   * -Djasypt.encryptor.password=my-secret-password 를 넣어주고 실행
+
+
+
+<img src="https://blog.kakaocdn.net/dn/dtzLOC/btrO0HDKzu8/FH5hWUiDSoyYcWcSDkxKDK/img.png" width=750 height=650>
+
+
+
+---
+
+
+
+## 3. gradle에서 build시 프로퍼티로 전달 - test property
+
+- gradle에서 build 시 test의 프로퍼티로 전달
+
+gradle에서 build를 진행하게되면 기본적으로 test도 같이 실행된다.
+
+이때 암호화를 이용하여 같이 테스트를 하려 한다면 build 실행 시 Password를 함께 전달해주어야 한다.
+
+```
+-Pjasypt.encryptor.password=my-secret-password
+```
+
+우선 build명령어 실행 시 **-P**를 사용하여 gradle의 환경변수로 넘겨준다.
+
+```
+test {
+    useJUnitPlatform()
+    systemProperty 'jasypt.encryptor.password', findProperty("jasypt.encryptor.password")
+}
+```
+
+* systemProperty는 키, 값 쌍을 인자로 테스트 수행 JVM의 시스템 프로퍼티 지정하는 메소드이다.
+
+* findProperty를 통해 '-P' 이하로 입력된 속성을 찾아서 JVM의 시스템 프로퍼티로 지정해준다.
+
+* 위와 같이 사용하면 public repository에서도 application.yml을 안전하게 보관할 수 있다.
 
